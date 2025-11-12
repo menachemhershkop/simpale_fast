@@ -1,7 +1,11 @@
 from fastapi import FastAPI, HTTPException
 import uvicorn
 import json
+from pydantic import BaseModel
 
+class Item(BaseModel):
+    id: int
+    price: float
 app= FastAPI()
 def load_data():
     with open("data.json", "r") as file:
@@ -16,14 +20,14 @@ def main_page():
 @app.get("/items/")
 def item_list():
     return load_data()
-@app.put("/itens/{item_id}")
-def update_data(item_id, price):
+@app.put("/items/{item_id}")
+def update_data(item :Item):
     items=load_data()
     for i in items:
-        if i['id'] == item_id:
-            i['price']=price
+        if i['id'] == item.id:
+            i['price']=item.price
         save_data(i)
+        return "Price update",items
     raise HTTPException(status_code=404,detail="Not found")
 
-if __name__=='__main__':
-    uvicorn.run(app, host='localhost',port=8000, reload=True)
+# if __name__=='__main__':
