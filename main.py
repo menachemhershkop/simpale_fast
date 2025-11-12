@@ -23,11 +23,12 @@ def item_list():
 @app.put("/items/{item_id}")
 def update_data(item :Item):
     items=load_data()
+
     for i in items:
         if i['id'] == item.id:
             i['price']=item.price
-        save_data(i)
-        return "Price update",items
+        save_data(items)
+        # return "Price update",items
     raise HTTPException(status_code=404,detail="Not found")
 
 # if __name__=='__main__':
